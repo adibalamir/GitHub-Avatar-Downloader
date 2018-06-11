@@ -1,6 +1,7 @@
 var request = require('request');
 var fs = require('fs');
-
+repoOwnerArg = process.argv[2];
+repoNameArg = process.argv[3];
 
 
 console.log('Welcome to the GitHub Avatar Downloader!');
@@ -30,17 +31,14 @@ function downloadImageByURL(url, filePath) {
   })
   .pipe(fs.createWriteStream(filePath))
 }
-
-getRepoContributors("nodejs", "node", function(err, result) {
+//"nodejs", "node"
+getRepoContributors(repoOwnerArg, repoNameArg, function(err, result) {
   console.log("Errors:", err);
+  if (!repoOwnerArg || !repoNameArg) {
+    console.log("Argument missing.")
+  }
   for (var i = 0; i < result.length; i++) {
     downloadImageByURL(result[i].avatar_url, "/vagrant/w2d1/GitHub-Avatar-Downloader/avatars/" + result[i].login + ".jpg")
   }
 });
 
-// getRepoContributors("nodejs", "node", function(err, result) {
-//   console.log("Errors:", err);
-//   for (var i = 0; i < result.length; i++) {
-//     console.log(result[i].avatar_url);
-//   }
-// });
