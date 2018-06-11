@@ -1,4 +1,5 @@
 var request = require('request');
+var fs = require('fs');
 
 
 console.log('Welcome to the GitHub Avatar Downloader!');
@@ -16,6 +17,20 @@ function getRepoContributors(repoOwner, repoName, cb) {
   request(options, function(err, res, body) {
     cb(err, JSON.parse(body));
   });
+}
+
+function downloadImageByURL(url, filePath) {
+  request.get(url)
+  .on('error', function(err) {
+    throw err;
+  })
+  .on('response', function(response) {
+    console.log("Response status code: " + response.statuscode);
+    console.log("Response status message: " + response.statusMessage);
+    console.log("Content-type: " + response.headers['content-type']);
+    console.log('Download complete.');
+  })
+  .pipe(fs.createWriteStream(filePath))
 }
 
 getRepoContributors("nodejs", "node", function(err, result) {
